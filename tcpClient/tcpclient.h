@@ -31,6 +31,8 @@ private:
 	QString message;
 	quint16 blockSize;
 	QPushButton *connectButton;
+	QPushButton *clearButton;
+	QPushButton *closeButton;
 
 	QGridLayout *mainLayout;
 
@@ -39,6 +41,7 @@ private slots:
 	void readMessage();
 	void displayError(QAbstractSocket::SocketError);
 	void connectButtonClicked();
+	//void clearTextEdit();
 };
 
 #endif // TCPCLIENT_H

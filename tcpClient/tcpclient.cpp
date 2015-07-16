@@ -41,10 +41,10 @@ tcpClient::~tcpClient()
 {
 
 }
-
+ 
 void tcpClient::newConnect()
 {
-	blockSize = 0;
+	blockSize = 1;
 
 	tcpSocket->abort();
 
@@ -57,20 +57,32 @@ void tcpClient::readMessage()
 	QDataStream in(tcpSocket);
 	in.setVersion(QDataStream::Qt_4_4);
  
-	if(blockSize==0)
+	if(blockSize == 0)
 	{
 		if(tcpSocket->bytesAvailable() < (int)sizeof(quint16))
 			return;
 		in >> blockSize;
+		//in >> m_useless;
 	}
 
 	if(tcpSocket->bytesAvailable() < blockSize)
 		return ;
-
-	in >> message;
-
-	//messageLabel->setText(message);
+	
+	char* buf;
+	qDebug() << blockSize;
+	in.readBytes(buf,(uint &)blockSize);
+	qDebug() << blockSize;
+	qDebug() << buf;
+	QString message(buf);
+	
+	//in >> message;
+	//qDebug() << blockSize;
+	//qDebug() << message;
+	//qDebug() << in ;
 	messageText->append(message);
+	blockSize = 0;
+	delete buf;
+	//qDebug() << in;
 }
 
 void tcpClient::displayError(QAbstractSocket::SocketError)

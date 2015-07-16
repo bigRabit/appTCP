@@ -30,6 +30,7 @@ private:
 	QTcpSocket *tcpSocket;
 	QString message;
 	quint16 blockSize;
+	quint16 m_useless;
 	QPushButton *connectButton;
 	QPushButton *clearButton;
 	QPushButton *closeButton;

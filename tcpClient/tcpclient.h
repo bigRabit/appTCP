@@ -25,10 +25,11 @@ private:
 	
 	QLabel *hostAddLabel;
 	QLabel *portLabel;
+	QLabel *statusLabel;
 	QLineEdit *hostLineEdit;
 	QLineEdit *portLineEdit;
 	QTcpSocket *tcpSocket;
-	QString message;
+	//QString message;
 	quint16 blockSize;
 	quint16 m_useless;
 	QPushButton *connectButton;
@@ -41,6 +42,7 @@ private slots:
 	void newConnect();
 	void readMessage();
 	void displayError(QAbstractSocket::SocketError);
+	void getSocketState();
 	void connectButtonClicked();
 	//void clearTextEdit();
 };

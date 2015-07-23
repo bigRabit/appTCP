@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcpclient.h'
 **
-** Created: Thu Jul 16 16:21:42 2015
+** Created: Thu Jul 23 15:51:00 2015
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_tcpClient[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   10, // methods
+       5,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
@@ -32,6 +32,7 @@ static const uint qt_meta_data_tcpClient[] = {
       24,   10,   10,   10, 0x08,
       38,   10,   10,   10, 0x08,
       81,   10,   10,   10, 0x08,
+      98,   10,   10,   10, 0x08,
 
        0        // eod
 };
@@ -39,7 +40,7 @@ static const uint qt_meta_data_tcpClient[] = {
 static const char qt_meta_stringdata_tcpClient[] = {
     "tcpClient\0\0newConnect()\0readMessage()\0"
     "displayError(QAbstractSocket::SocketError)\0"
-    "connectButtonClicked()\0"
+    "getSocketState()\0connectButtonClicked()\0"
 };
 
 const QMetaObject tcpClient::staticMetaObject = {
@@ -70,9 +71,10 @@ int tcpClient::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: newConnect(); break;
         case 1: readMessage(); break;
         case 2: displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 3: connectButtonClicked(); break;
+        case 3: getSocketState(); break;
+        case 4: connectButtonClicked(); break;
         }
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

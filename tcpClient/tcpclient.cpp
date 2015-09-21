@@ -13,10 +13,15 @@ tcpClient::tcpClient(QWidget *parent, Qt::WFlags flags)
 	connectButton = new QPushButton("Connect");
 	clearButton = new QPushButton("Clear");
 	closeButton = new QPushButton("Close");
+	downLoadBotton = new QPushButton("Download");
 
 	messageText = new QTextEdit(this);
 	messageText->setText("hello world !");
-
+	
+	fileWidget = new QTreeWidget(this);
+	fileWidget->setHeaderLabels(QStringList() << tr("File Name") << tr("Size") << tr("Created Time") << tr("LastModified Time"));
+	fileWidget->header()->setResizeMode(QHeaderView::ResizeToContents );
+	
 	mainLayout = new QGridLayout(this);
 
 	mainLayout->addWidget(hostAddLabel,0,0);
@@ -28,13 +33,19 @@ tcpClient::tcpClient(QWidget *parent, Qt::WFlags flags)
 	mainLayout->addWidget(clearButton,1,4);
 	mainLayout->addWidget(closeButton,2,4);
 	mainLayout->addWidget(messageText,2,0,5,4);
+	mainLayout->addWidget(fileWidget,8,0,5,4);
+	mainLayout->addWidget(downLoadBotton,8,4);
 	setLayout(mainLayout);	
 
-	tcpSocket = new QTcpSocket(this);
+	msgTcpSocket = new QTcpSocket(this);
+	fileTcpSocket = new QTcpSocket(this);
 
-	connect(tcpSocket,SIGNAL(readyRead()),this,SLOT(readMessage()));
-	connect(tcpSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(displayError(QAbstractSocket::SocketError)));
-	connect(tcpSocket,SIGNAL(stateChanged(QAbstractSocket::SocketState)),this,SLOT(getSocketState()));
+	connect(msgTcpSocket,SIGNAL(readyRead()),this,SLOT(readMessage()));
+	connect(msgTcpSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(displayError(QAbstractSocket::SocketError)));
+	connect(msgTcpSocket,SIGNAL(stateChanged(QAbstractSocket::SocketState)),this,SLOT(getSocketState()));
+
+	connect(fileTcpSocket,SIGNAL(readyRead()),this,SLOT(readFileMessage()));
+
 	connect(connectButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
 	connect(clearButton,SIGNAL(clicked()),messageText,SLOT(clear()));
 	connect(closeButton,SIGNAL(clicked()),this,SLOT(close()));
@@ -45,32 +56,32 @@ tcpClient::~tcpClient()
 
 }
  
-void tcpClient::newConnect()
+void tcpClient::newMsgConnect()
 {
 	blockSize = 0;
 
-	tcpSocket->abort();
+	msgTcpSocket->abort();
 
 	//tcpSocket->connectToHost(hostLineEdit->text(),portLineEdit->text().toInt());
-	tcpSocket->connectToHost(QHostAddress::LocalHost,23333);
+	msgTcpSocket->connectToHost(QHostAddress::LocalHost,23333);
 	messageText->clear();
-	qDebug() << tcpSocket->state();
+	qDebug() << msgTcpSocket->state();
 }
 
 void tcpClient::readMessage()
 {
-	QDataStream in(tcpSocket);
+	QDataStream in(msgTcpSocket);
 	in.setVersion(QDataStream::Qt_4_4);
 
     if(blockSize == 0) 
     {
-       if(tcpSocket->bytesAvailable() < (int)sizeof(quint16)) return;
+       if(msgTcpSocket->bytesAvailable() < (int)sizeof(quint16)) return;
        in >> blockSize;
     }
-    if(tcpSocket->bytesAvailable() < blockSize) 
+    if(msgTcpSocket->bytesAvailable() < blockSize) 
     	return;
 
-    qDebug() << blockSize;
+    //qDebug() << blockSize;
     
     QString message;
     in >> message;
@@ -83,17 +94,18 @@ void tcpClient::readMessage()
 
 void tcpClient::displayError(QAbstractSocket::SocketError)
 {
-	messageText->append(tcpSocket->errorString());
+	messageText->append(msgTcpSocket->errorString());
 }
 
 void tcpClient::connectButtonClicked()
 {
-	newConnect();
+	newMsgConnect();
+	newFileConnect();
 }
 
 void tcpClient::getSocketState()
 {
-	switch(tcpSocket->state())
+	switch(msgTcpSocket->state())
 	{
 		case QAbstractSocket::UnconnectedState:
          statusLabel->setText(tr("the Socket current state: unconnected state"));
@@ -120,4 +132,61 @@ void tcpClient::getSocketState()
          statusLabel->setText(tr("the Socket current state: Unknown state"));
          break;
 	}
+}
+
+void tcpClient::newFileConnect()
+{
+	m_useless = 0;
+
+	fileTcpSocket->abort();
+
+	//tcpSocket->connectToHost(hostLineEdit->text(),portLineEdit->text().toInt());
+	fileTcpSocket->connectToHost(QHostAddress::LocalHost,23334);
+	fileWidget->clear();
+	qDebug() << fileTcpSocket->state();
+}
+
+void tcpClient::readFileMessage()
+{
+	QDataStream filein(fileTcpSocket);
+	filein.setVersion(QDataStream::Qt_4_4);
+	
+	if(m_useless == 0) 
+	{
+		if(fileTcpSocket->bytesAvailable() < (int)sizeof(quint16)) return;
+		filein >> m_useless;
+		qDebug() << m_useless;
+	}
+
+	if(fileTcpSocket->bytesAvailable() < m_useless) 
+		return;
+
+	//qDebug() << m_useless;
+	//QByteArray qba = fileTcpSocket->readAll();
+	//qDebug() << qba;
+	QString message;
+	filein >> message;
+	//qDebug() << message;
+	
+	QStringList FileInfs = message.split("\n");
+
+	QList<QTreeWidgetItem *> itemList;
+	for (int i=1;i<15;i++)
+	{
+		QStringList FileInf = FileInfs.at(i).split("\t");
+
+		QTreeWidgetItem *item = new QTreeWidgetItem;
+		
+		item->setText(0,FileInf.at(0));
+		item->setText(1,FileInf.at(1));
+		item->setText(2,FileInf.at(2));
+		item->setText(3,FileInf.at(3));
+
+		QPixmap pixmap("Resources/file.png");
+		item->setIcon(0,pixmap);
+
+		itemList.push_back(item);
+	}
+	fileWidget->addTopLevelItems(itemList);
+	m_useless = 0;
 }

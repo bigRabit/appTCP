@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcpclient.h'
 **
-** Created: Thu Jul 23 15:51:00 2015
+** Created: Thu Sep 17 09:46:41 2015
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,22 +23,25 @@ static const uint qt_meta_data_tcpClient[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   10, // methods
+       7,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
  // slots: signature, parameters, type, tag, flags
       11,   10,   10,   10, 0x08,
-      24,   10,   10,   10, 0x08,
-      38,   10,   10,   10, 0x08,
-      81,   10,   10,   10, 0x08,
-      98,   10,   10,   10, 0x08,
+      27,   10,   10,   10, 0x08,
+      44,   10,   10,   10, 0x08,
+      58,   10,   10,   10, 0x08,
+      76,   10,   10,   10, 0x08,
+     119,   10,   10,   10, 0x08,
+     136,   10,   10,   10, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_tcpClient[] = {
-    "tcpClient\0\0newConnect()\0readMessage()\0"
+    "tcpClient\0\0newMsgConnect()\0newFileConnect()\0"
+    "readMessage()\0readFileMessage()\0"
     "displayError(QAbstractSocket::SocketError)\0"
     "getSocketState()\0connectButtonClicked()\0"
 };
@@ -68,13 +71,15 @@ int tcpClient::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: newConnect(); break;
-        case 1: readMessage(); break;
-        case 2: displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 3: getSocketState(); break;
-        case 4: connectButtonClicked(); break;
+        case 0: newMsgConnect(); break;
+        case 1: newFileConnect(); break;
+        case 2: readMessage(); break;
+        case 3: readFileMessage(); break;
+        case 4: displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 5: getSocketState(); break;
+        case 6: connectButtonClicked(); break;
         }
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

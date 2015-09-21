@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'tcpclient.ui'
 **
-** Created: Thu Jul 23 15:51:00 2015
+** Created: Wed Sep 16 10:28:20 2015
 **      by: Qt User Interface Compiler version 4.4.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

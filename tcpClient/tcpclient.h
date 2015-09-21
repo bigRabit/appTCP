@@ -9,6 +9,9 @@
 #include <QtNetWork>
 #include <QTextEdit>
 #include <QGridLayout>
+#include <QTreeWidget>
+#include <QStringList>
+#include <QHeaderView>
 
 class tcpClient : public QWidget
 {
@@ -22,25 +25,33 @@ private:
 	Ui::tcpClientClass ui;
 
 	QTextEdit *messageText;
+	QTreeWidget *fileWidget;
 	
 	QLabel *hostAddLabel;
 	QLabel *portLabel;
 	QLabel *statusLabel;
 	QLineEdit *hostLineEdit;
 	QLineEdit *portLineEdit;
-	QTcpSocket *tcpSocket;
+	
+	QTcpSocket *msgTcpSocket;
+	QTcpSocket *fileTcpSocket;
+	
 	//QString message;
 	quint16 blockSize;
 	quint16 m_useless;
+
 	QPushButton *connectButton;
 	QPushButton *clearButton;
 	QPushButton *closeButton;
+	QPushButton *downLoadBotton;
 
 	QGridLayout *mainLayout;
 
 private slots:
-	void newConnect();
+	void newMsgConnect();
+	void newFileConnect();
 	void readMessage();
+	void readFileMessage();
 	void displayError(QAbstractSocket::SocketError);
 	void getSocketState();
 	void connectButtonClicked();
